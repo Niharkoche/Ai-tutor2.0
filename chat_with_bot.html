@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with AI Bot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background-color: #161b22;
+            color: #c9d1d9;
+            text-align: center;
+            padding: 1em 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 1em;
+            max-width: 100%;
+            height: calc(100vh - 150px);
+            margin: 0 auto;
+            background: #161b22;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            overflow-y: hidden;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1em;
+            box-sizing: border-box;
+        }
+
+        .message {
+            margin-bottom: 1em;
+            padding: 0.5em;
+            border-radius: 5px;
+        }
+
+        .message.user {
+            background-color: #6e40c9;
+            color: #ffffff;
+            align-self: flex-end;
+        }
+
+        .message.bot {
+            background-color: #21262d;
+            color: #c9d1d9;
+            align-self: flex-start;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 0.5em;
+            padding: 1em;
+            box-sizing: border-box;
+        }
+
+        .input-container input {
+            flex: 1;
+            padding: 0.75em;
+            border: 1px solid #30363d;
+            border-radius: 5px;
+            font-size: 1em;
+            background-color: #0d1117;
+            color: #c9d1d9;
+        }
+
+        .input-container button {
+            padding: 0.75em 1.5em;
+            background-color: #6e40c9;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .input-container button:hover {
+            background-color: #9d68e8;
+        }
+
+        input:focus, button:focus {
+            outline: none;
+            box-shadow: 0 0 5px #6e40c9;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Chat with AI TUTOR</h1>
+    </header>
+
+    <div class="chat-container">
+        <div class="messages" id="messages">
+            <!-- Chat messages will appear here -->
+        </div>
+
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Type your message here..." />
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const messagesDiv = document.getElementById('messages');
+
+        function appendMessage(content, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+            messageDiv.textContent = content;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const userInput = document.getElementById('userInput');
+            const message = userInput.value.trim();
+
+            if (message) {
+                appendMessage(message, 'user');
+                userInput.value = '';
+
+                try {
+                    const response = await fetch('https://api.openai.com/v1/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': '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'
+                        },
+                        body: JSON.stringify({
+                            model: 'text-davinci-003',
+                            prompt: message,
+                            max_tokens: 150
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        const botResponse = data.choices[0].text.trim();
+                        appendMessage(botResponse, 'bot');
+                    } else {
+                        appendMessage('Error: Unable to connect to the server.', 'bot');
+                    }
+                } catch (error) {
+                    appendMessage('Error: Something went wrong.', 'bot');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
