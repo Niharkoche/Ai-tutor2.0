@@ -112,6 +112,30 @@
     </div>
 
     <script>
+        // Student responses dictionary
+        const studentResponses = {
+            "hi": "Hello! How can I assist you with your studies today?",
+            "hello": "Hi there! What can I help you with today?",
+            "how are you": "I'm doing great, thank you! How are you doing with your studies?",
+            "what is your name": "I am your study assistant bot! You can call me StudyBot.",
+            "what can you do": "I can help you with studying, homework, or explaining concepts. Just ask me anything related to your studies!",
+            "bye": "Goodbye! Best of luck with your studies!",
+            "goodbye": "See you later! Take care and keep studying!",
+            "thank you": "You're welcome! Don't hesitate to ask if you need more help.",
+            "thanks": "You're welcome! Always here to help with your studies.",
+            "please": "You're welcome! Let me know if you need further help.",
+            "who are you": "I am your study assistant bot. I'm here to help you with anything related to your schoolwork.",
+            "how old are you": "I'm just a bot, so I don't have an age! But I'm here to help you with your studies anytime.",
+            "can you help me with homework": "Of course! Let me know what subject or question you need help with.",
+            "how do I study for exams": "Start early, break down your study sessions into chunks, and review regularly. Try using active recall and practice problems!",
+            "what is the best way to study": "Effective study techniques include active recall, spaced repetition, and taking breaks. It's also important to find a quiet place to focus.",
+            "what is the meaning of life": "The meaning of life is a philosophical question, but in the context of your studies, it’s about learning, growing, and reaching your goals!",
+            "how can I improve my grades": "Focus on time management, stay consistent with your studies, and don't hesitate to ask for help when you don't understand something.",
+            "what is 2 + 2": "2 + 2 equals 4.",
+            // Add more responses as needed...
+        };
+
+        // Function to append messages
         function appendMessage(content, sender) {
             const messagesDiv = document.getElementById('messages');
             const messageDiv = document.createElement('div');
@@ -121,19 +145,22 @@
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
 
+        // Function to handle user input and bot response
         function sendMessage() {
             const userInput = document.getElementById('userInput');
-            const message = userInput.value.trim();
+            const message = userInput.value.trim().toLowerCase();
 
             if (message) {
                 appendMessage(message, 'user');
                 userInput.value = '';
 
-                // Simulate a bot response
+                // Check if the message is in studentResponses
+                const response = studentResponses[message] || "I'm not sure how to answer that. Can you ask something else?";
+                
+                // Simulate bot response after 1 second
                 setTimeout(() => {
-                    const botResponse = "Bot: This is a simulated response.";
-                    appendMessage(botResponse, 'bot');
-                }, 1000); // Simulate a response after 1 second
+                    appendMessage(response, 'bot');
+                }, 1000);
             }
         }
 
