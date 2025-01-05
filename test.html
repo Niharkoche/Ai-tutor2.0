@@ -14,13 +14,14 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
+            box-sizing: border-box;
         }
 
         header {
             background-color: #161b22;
             color: #c9d1d9;
             text-align: center;
-            padding: 1em 0;
+            padding: 1em;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
 
@@ -29,13 +30,12 @@
             display: flex;
             flex-direction: column;
             padding: 1em;
-            max-width: 100%;
-            height: calc(100vh - 150px);
             margin: 0 auto;
             background: #161b22;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
             border-radius: 8px;
-            overflow-y: hidden;
+            overflow: hidden;
+            max-width: 100%;
         }
 
         .messages {
@@ -49,6 +49,7 @@
             margin-bottom: 1em;
             padding: 0.5em;
             border-radius: 5px;
+            max-width: 75%;
         }
 
         .message.user {
@@ -98,6 +99,46 @@
             outline: none;
             box-shadow: 0 0 5px #6e40c9;
         }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                padding: 0.5em;
+                border-radius: 0;
+                box-shadow: none;
+                height: calc(100vh - 110px);
+            }
+
+            .input-container input, .input-container button {
+                padding: 0.5em;
+                font-size: 0.9em;
+            }
+
+            .messages {
+                padding: 0.5em;
+            }
+
+            .message {
+                font-size: 0.9em;
+                padding: 0.5em;
+                max-width: 85%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chat-container {
+                padding: 0.5em;
+                height: calc(100vh - 120px);
+            }
+
+            .input-container input, .input-container button {
+                padding: 0.5em;
+                font-size: 0.8em;
+            }
+
+            header h1 {
+                font-size: 1.2em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -129,7 +170,7 @@
 
         // Predefined responses
         const responses = {
-    "hi": "Hello! How can I assist you with your studies today?",
+            "hi": "Hello! How can I assist you with your studies today?",
     "hello": "Hi there! What can I help you with today?",
     "how are you": "I'm doing great, thank you! How are you doing with your studies?",
     "what is your name": "I am your study assistant bot! You can call me StudyBot.",
@@ -183,8 +224,8 @@
     "how can I avoid plagiarism": "To avoid plagiarism, always credit your sources by properly citing them, and make sure to paraphrase or quote directly when using someone else’s ideas.",
     "what is the best way to manage my time": "Try using a planner or digital tool to organize your tasks by deadline, prioritize important tasks, and avoid procrastination.",
     "what are the laws of motion": "The three laws of motion, proposed by Isaac Newton, describe the relationship between a body and the forces acting upon it. They are: 1) an object in motion stays in motion unless acted upon, 2) force equals mass times acceleration, and 3) for every action, there is an equal and opposite reaction.",
-    "what is the atomic number": "The atomic number is the number of protons in an atom’s nucleus. It determines the element’s identity in the periodic table."
-};
+        };
+
         function sendMessage() {
             const userInput = document.getElementById('userInput');
             const message = userInput.value.trim();
@@ -192,24 +233,19 @@
             if (message) {
                 appendMessage(message, 'user');
                 userInput.value = '';
-
-                // Disable the input and button while the message is being sent
                 userInput.disabled = true;
                 document.querySelector('button').disabled = true;
 
-                // Simulate bot response
                 const botResponse = responses[message.toLowerCase()] || "Sorry, I didn't understand that.";
                 setTimeout(() => {
                     appendMessage(botResponse, 'bot');
-                    // Enable the input and button again
                     userInput.disabled = false;
                     document.querySelector('button').disabled = false;
-                    userInput.focus(); // Focus back to the input field after response
-                }, 1000); // Simulate a delay
+                    userInput.focus();
+                }, 1000);
             }
         }
 
-        // Optional: Automatically focus the input field when the page loads
         window.onload = function() {
             document.getElementById('userInput').focus();
         };
